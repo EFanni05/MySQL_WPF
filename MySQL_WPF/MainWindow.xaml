@@ -10,11 +10,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="Add" Content="Add" HorizontalAlignment="Left" Margin="220,55,0,0" VerticalAlignment="Top" Click="Add"/>
+        <Button x:Name="AddButton" Content="Add" HorizontalAlignment="Left" Margin="220,55,0,0" VerticalAlignment="Top" Click="Add"/>
         <TextBox x:Name="IDText" HorizontalAlignment="Left" Margin="50,61,0,0" TextWrapping="Wrap" Text="ID" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="NameText" HorizontalAlignment="Left" Margin="50,101,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="Update" Content="Update" HorizontalAlignment="Left" Margin="220,86,0,0" VerticalAlignment="Top" Click="Update"/>
-        <Button x:Name="Delete" Content="Delete" HorizontalAlignment="Left" Margin="290,55,0,0" VerticalAlignment="Top" Click="Delete"/>
+        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="220,86,0,0" VerticalAlignment="Top" Click="Update"/>
+        <Button x:Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Margin="290,55,0,0" VerticalAlignment="Top" Click="Delete"/>
         <ListBox x:Name="Lista" HorizontalAlignment="Left" Height="220" Margin="40,144,0,0" VerticalAlignment="Top" Width="130" d:ItemsSource="{d:SampleData ItemCount=5}"/>
 
     </Grid>
