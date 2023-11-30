@@ -25,6 +25,7 @@ namespace MySQL_WPF
     public partial class MainWindow : Window
     {
         static MySqlConnection connection;
+        List<Test> tests = new List<Test>();
 
         public MainWindow()
         {
@@ -53,8 +54,12 @@ namespace MySQL_WPF
                 {
                     while (reader.Read())
                     {
-                        
-                        Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
+                        Test x = new Test(int.Parse(reader.GetString(0)), reader.GetString(1));
+                        tests.Add(x);
+                    }
+                    for (int i = 0; i < tests.Count; i++)
+                    {
+                        Lista.Items.Add(tests[i].ToString());
                     }
                 }
                 connection.Close();
@@ -67,97 +72,109 @@ namespace MySQL_WPF
 
         private void Add(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(IDText.Text.Trim(), out int id))
-            {
-                MessageBox.Show("Error: ID");
-            }
-            else if (NameText.Text.Trim() == "")
+            if (NameText.Text.Trim() == "")
             {
                 MessageBox.Show("Error: name");
             }
             else
             {
-                string sql = $"INSERT INTO `test` (`id`, `name`) VALUES ('{id}', '{NameText.Text}')";
-                MySqlCommand command = new MySqlCommand( sql, connection);
-                try
+                Test x = new Test(tests.Count, NameText.Text);
+                if(x.Name != null)
                 {
-                    connection.Open();
-                    MySqlDataReader reader = command.ExecuteReader();
-                    command = new MySqlCommand($"SELECT * FROM `test` WHERE id = {id}", connection);
-                    connection.Close();
-                    connection.Open();
-                    reader = command.ExecuteReader();
-                    if (!reader.HasRows)
+                    tests.Add(x);
+                    string sql = $"INSERT INTO `test` (`id`, `name`) VALUES (null, '{x.Name}')";
+                    MySqlCommand command = new MySqlCommand( sql, connection);
+                    try
                     {
-                        MessageBox.Show("Query unsuccessful");
-                    }
-                    else
-                    {
-                        while (reader.Read())
+                        connection.Open();
+                        MySqlDataReader reader = command.ExecuteReader();
+                        Test v = tests.Find(y => y.Id == x.Id);
+                        tests[v.Id].Id = int.Parse(reader.GetString(0));
+                        command = new MySqlCommand($"SELECT * FROM `test`", connection);
+                        connection.Close();
+                        connection.Open();
+                        reader = command.ExecuteReader();
+                        if (!reader.HasRows)
                         {
-
-                            Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
+                            MessageBox.Show("Query unsuccessful");
                         }
+                        else
+                        {
+                            Lista.Items.Clear();
+                            while (reader.Read())
+                            {
+                                Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
+                            }
+                        }
+                        connection.Close();
                     }
-                    connection.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Query Error [{ex.Message}]");
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Query Error [{ex.Message}]");
+                    }
                 }
             }
         }
 
         private void Update(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(IDText.Text.Trim(), out int id))
+            string item = Lista.SelectedItems.ToString();
+            if(item != "")
             {
-                MessageBox.Show("Error: ID");
-            }
-            else if (NameText.Text.Trim() == "")
-            {
-                MessageBox.Show("Error: name");
+                string v = item.Substring(0, 3).Replace('.', ' ').Trim();
+                int id = int.Parse(v);
+                Test x = new Test(id, item.Replace($"{v}.", " ").Trim());
+                tests.Add(x);
+                if(x.Name != null)
+                {
+
+                    string sql = $"UPDATE `test` SET `name`= '{x.Name}' WHERE id = {id}";
+                    MySqlCommand command = new MySqlCommand(sql, connection);
+                    try
+                    {
+                        connection.Open();
+                        MySqlDataReader reader = command.ExecuteReader();
+                        command = new MySqlCommand("SELECT * FROM `test`", connection);
+                        connection.Close();
+                        connection.Open();
+                        reader = command.ExecuteReader();
+                        if (!reader.HasRows)
+                        {
+                            MessageBox.Show("Query unsuccessful");
+                        }
+                        else
+                        {
+                            Lista.Items.Clear();
+                            while (reader.Read())
+                            {
+                                Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
+                            }
+                        }
+                        connection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Query Error [{ex.Message}]");
+                    }
+                }
             }
             else
             {
-                string sql = $"UPDATE `test` SET `name`= '{NameText.Text}' WHERE id = {id}";
-                MySqlCommand command = new MySqlCommand(sql, connection);
-                try
-                {
-                    connection.Open();
-                    MySqlDataReader reader = command.ExecuteReader();
-                    command = new MySqlCommand($"SELECT * FROM `test` WHERE id = {id}", connection);
-                    connection.Close();
-                    connection.Open();
-                    reader = command.ExecuteReader();
-                    if (!reader.HasRows)
-                    {
-                        MessageBox.Show("Query unsuccessful");
-                    }
-                    else
-                    {
-                        while (reader.Read())
-                        {
-                            Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
-                        }
-                    }
-                    connection.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Query Error [{ex.Message}]");
-                }
+                MessageBox.Show("Error: no select");
             }
         }
 
         private void Delete(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(IDText.Text.Trim(), out int id))
+            string item = Lista.SelectedItem.ToString();
+            if (item.Trim() == "")
             {
-                MessageBox.Show("Error: ID");
+                MessageBox.Show("Error: no select");
             }
             else
             {
+                string v = item.Substring(0, 3).Replace('.', ' ').Trim();
+                int id = int.Parse(v);
                 string sql = $"DELETE FROM `test` WHERE id = {id}";
                 MySqlCommand command = new MySqlCommand(sql, connection);
                 try

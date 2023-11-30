@@ -5,16 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MySQL_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="250">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddButton" Content="Add" HorizontalAlignment="Left" Margin="220,55,0,0" VerticalAlignment="Top" Click="Add"/>
-        <TextBox x:Name="IDText" HorizontalAlignment="Left" Margin="50,61,0,0" TextWrapping="Wrap" Text="ID" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="NameText" HorizontalAlignment="Left" Margin="50,101,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="220,86,0,0" VerticalAlignment="Top" Click="Update"/>
-        <Button x:Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Margin="290,55,0,0" VerticalAlignment="Top" Click="Delete"/>
+        <Button x:Name="AddButton" Content="Add" HorizontalAlignment="Left" Margin="40,86,0,0" VerticalAlignment="Top" Click="Add"/>
+        <TextBox x:Name="NameText" HorizontalAlignment="Left" Margin="53,46,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="84,86,0,0" VerticalAlignment="Top" Click="Update"/>
+        <Button x:Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Margin="150,86,0,0" VerticalAlignment="Top" Click="Delete"/>
         <ListBox x:Name="Lista" HorizontalAlignment="Left" Height="220" Margin="40,144,0,0" VerticalAlignment="Top" Width="130" d:ItemsSource="{d:SampleData ItemCount=5}"/>
 
     </Grid>
