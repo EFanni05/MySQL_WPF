@@ -55,11 +55,7 @@ namespace MySQL_WPF
                     while (reader.Read())
                     {
                         Test x = new Test(int.Parse(reader.GetString(0)), reader.GetString(1));
-                        tests.Add(x);
-                    }
-                    for (int i = 0; i < tests.Count; i++)
-                    {
-                        Lista.Items.Add(tests[i].ToString());
+                        Lista.Items.Add(x.ToString());
                     }
                 }
                 connection.Close();
@@ -88,24 +84,8 @@ namespace MySQL_WPF
                     {
                         connection.Open();
                         MySqlDataReader reader = command.ExecuteReader();
-                        Test v = tests.Find(y => y.Id == x.Id);
-                        tests[v.Id].Id = int.Parse(reader.GetString(0));
-                        command = new MySqlCommand($"SELECT * FROM `test`", connection);
-                        connection.Close();
-                        connection.Open();
-                        reader = command.ExecuteReader();
-                        if (!reader.HasRows)
-                        {
-                            MessageBox.Show("Query unsuccessful");
-                        }
-                        else
-                        {
-                            Lista.Items.Clear();
-                            while (reader.Read())
-                            {
-                                Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
-                            }
-                        }
+                        x.Id = int.Parse(reader.GetString(0));
+                       Lista.Items.Add(x.ToString());
                         connection.Close();
                     }
                     catch (Exception ex)
@@ -118,38 +98,23 @@ namespace MySQL_WPF
 
         private void Update(object sender, RoutedEventArgs e)
         {
-            string item = Lista.SelectedItems.ToString();
-            if(item != "")
+            if (Lista.SelectedItem.ToString() != "")
             {
-                string v = item.Substring(0, 3).Replace('.', ' ').Trim();
+                string v = Lista.SelectedItem.ToString().Substring(0, 3).Replace('.', ' ').Trim();
                 int id = int.Parse(v);
-                Test x = new Test(id, item.Replace($"{v}.", " ").Trim());
-                tests.Add(x);
-                if(x.Name != null)
+                Test update = new Test(id, Lista.SelectedItem.ToString().Replace($"{v}\t", " ").Trim());
+                if(update.Name != null)
                 {
 
-                    string sql = $"UPDATE `test` SET `name`= '{x.Name}' WHERE id = {id}";
+                    string sql = $"UPDATE `test` SET `name`= '{update.Name}' WHERE id = {id}";
                     MySqlCommand command = new MySqlCommand(sql, connection);
                     try
                     {
                         connection.Open();
                         MySqlDataReader reader = command.ExecuteReader();
-                        command = new MySqlCommand("SELECT * FROM `test`", connection);
-                        connection.Close();
-                        connection.Open();
-                        reader = command.ExecuteReader();
-                        if (!reader.HasRows)
-                        {
-                            MessageBox.Show("Query unsuccessful");
-                        }
-                        else
-                        {
-                            Lista.Items.Clear();
-                            while (reader.Read())
-                            {
-                                Lista.Items.Add($"{reader.GetString(0)} - {reader.GetString(1)}");
-                            }
-                        }
+                        Lista.Items.Remove(update.ToString());
+                        update.Id = int.Parse(reader.GetString(0));
+                        Lista.Items.Add(update.ToString());
                         connection.Close();
                     }
                     catch (Exception ex)

@@ -37,7 +37,7 @@ namespace MySQL_WPF
 
         public override string? ToString()
         {
-            return $"{id} - {name}";
+            return $"{id}\t {name}";
         }
     }
 }
